@@ -36,7 +36,6 @@ def go(config: DictConfig):
     with tempfile.TemporaryDirectory() as tmp_dir:
 
         if "download" in active_steps:
-            print(" +++++++++++++  Download ++++++++++++++++")
             # Download file and load in W&B
             _ = mlflow.run(
                 f"{config['main']['components_repository']}/get_data",
@@ -50,7 +49,6 @@ def go(config: DictConfig):
             )
 
         if "basic_cleaning" in active_steps:
-            print(" +++++++++++++  Basic cleaning ++++++++++++++++")
             _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "basic_cleaning"),
                 "main",
@@ -65,7 +63,6 @@ def go(config: DictConfig):
             )    
 
         if "data_check" in active_steps:
-            print(" +++++++++++++ Data check ++++++++++++++++")
             _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "data_check"),
                 "main",
@@ -77,12 +74,9 @@ def go(config: DictConfig):
                     "max_price": config['etl']['max_price']
                 },
             )    
-            print(" +++++++++++++ Data check done ++++++++++++++++")
 
         if "data_split" in active_steps:
-            print(" +++++++++++++  Data split ++++++++++++++++")
             # Split the data set into train and test data sets
-
             mlflow.run(
                 f"{config['main']['components_repository']}/train_val_test_split",
                 "main",
@@ -93,7 +87,6 @@ def go(config: DictConfig):
                     "stratify_by": config["modeling"]["stratify_by"]
                 }
             )
-            print(" +++++++++++++ Data split done ++++++++++++++++")
 
         if "train_random_forest" in active_steps:
 
@@ -102,10 +95,6 @@ def go(config: DictConfig):
             with open(rf_config, "w+") as fp:
                 json.dump(dict(config["modeling"]["random_forest"].items()), fp)  # DO NOT TOUCH
 
-            # NOTE: use the rf_config we just created as the rf_config parameter for the train_random_forest
-            # step
-
-            print(" +++++++++++++ Train random forest model ++++++++++++++++")
             _ = mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "train_random_forest"),
                 "main",
@@ -119,15 +108,16 @@ def go(config: DictConfig):
                     "output_artifact": "random_forest_export",
                     },
             )    
-            print(" +++++++++++++ Train random forest model done ++++++++++++++++")
 
         if "test_regression_model" in active_steps:
-
-            ##################
-            # Implement here #
-            ##################
-
-            pass
+            mlflow.run(
+                f"{config['main']['components_repository']}/test_regression_model",
+                "main",
+                parameters={
+                    "mlflow_model": "random_forest_export:prod",
+                    "test_dataset": "test_data.csv:latest",
+                }
+            )
 
 
 if __name__ == "__main__":

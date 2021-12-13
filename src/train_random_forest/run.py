@@ -9,7 +9,6 @@ import shutil
 import matplotlib.pyplot as plt
 
 import mlflow
-from mlflow.models import infer_signature
 import json
 
 import pandas as pd
@@ -101,21 +100,7 @@ def go(args):
     # Save the sk_pipe pipeline as a mlflow.sklearn model in the directory "random_forest_dir"
     # HINT: use mlflow.sklearn.save_model
     # YOUR CODE HERE
-    #roberi = mlflow.sklearn.save_model(sk_pipe, roberi, serialization_format=mlflow.sklearn.SERIALIZATION_FORMAT_CLOUDPICKLE)
-#    export_path = os.path.join("./random_forest_dir", args.output_artifact)
-
-#    signature = mlflow.infer_signature(X_val, y_pred)
-
-#    mlflow.sklearn.save_model(
-#        sk_pipe,  # our pipeline
-#        export_path,  # Path to a directory for the produced package
-#        signature=signature,
-#        input_example=X_val.iloc[:2]  # the first few examples
-#    )
-
     mlflow.sklearn.save_model(sk_pipe, "random_forest_dir")
-    # mlflow.sklearn.save_model(sk_model, sk_path_dir_2,
-    #                      serialization_format=mlflow.sklearn.SERIALIZATION_FORMAT_PICKLE)
     ######################################
 
     ######################################
@@ -146,18 +131,15 @@ def go(args):
     # Now log the variable "mae" under the key "mae".
     # YOUR CODE HERE
     #Upload to W&B
-    #run.log({"mae": mae})
     run.summary['mae'] = mae
     ######################################
 
-    #logger.info("Log MAE done")
     # Upload to W&B the feature importance visualization
     run.log(
         {
           "feature_importance": wandb.Image(fig_feat_imp),
         }
     )
-    #logger.info("Done with traininng")
 
 
 def plot_feature_importance(pipe, feat_names):
