@@ -58,42 +58,42 @@ if __name__ == "__main__":
     parser.add_argument(
         "--input_artifact", 
         type=str,
-        help="input artifact",
+        help="Name of the input artifact (CSV-file) to be cleaned",
         required=True
     )
 
     parser.add_argument(
         "--output_artifact", 
         type=str,
-        help="output artifact",
+        help="Name of the output artifact",
         required=True
     )
 
     parser.add_argument(
         "--output_type", 
         type=str,
-        help="output type",
+        help="Output type of the artifact. Used to organize and differentiate artifacts in W&B",
         required=True
     )
 
     parser.add_argument(
         "--output_description", 
         type=str,
-        help="output description",
+        help="A description of the output artifact",
         required=True
     )
 
     parser.add_argument(
         "--min_price", 
         type=float,
-        help="min price",
+        help="Minimum price to consider a valid data sample. Lower prices are filtered out from the output artifact",
         required=True
     )
 
     parser.add_argument(
         "--max_price", 
         type=float,
-        help="max price",
+        help="Maximum price to consider a valid data sample. Higher prices are filtered out from the output artifact",
         required=True
     )
 

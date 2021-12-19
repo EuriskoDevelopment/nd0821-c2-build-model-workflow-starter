@@ -6,28 +6,28 @@ entry_points:
     parameters:
 
       input_artifact:
-        description: ## ADD DESCRIPTION
+        description: Name of the input artifact (CSV-file) to be cleaned
         type: string
 
       output_artifact:
-        description: ## ADD DESCRIPTION
+        description: Name of the output artifact
         type: string
 
       output_type:
-        description: ## ADD DESCRIPTION
+        description: Output type of the artifact. Used to organize and differentiate artifacts in W&B
         type: string
 
       output_description:
-        description: ## ADD DESCRIPTION
+        description: A description of the output artifact
         type: string
 
       min_price:
-        description: ## ADD DESCRIPTION
-        type: string
+        description: Minimum price to consider a valid data sample. Lower prices are filtered out from the output artifact
+        type: float
 
       max_price:
-        description: ## ADD DESCRIPTION
-        type: string
+        description: Maximum price to consider a valid data sample. Higher prices are filtered out from the output artifact
+        type: float
 
 
     command: >-
